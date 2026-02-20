@@ -1,0 +1,40 @@
+# ==========================================
+# Archivos y carpetas de Eclipse/IDE
+# ==========================================
+.metadata/
+*.iml
+.idea/
+*.classpath
+*.project
+*.settings/
+
+# ==========================================
+# Archivos de compilación y dependencias
+# ==========================================
+target/
+bin/
+out/
+
+# ==========================================
+# Archivos de sistema
+# ==========================================
+.DS_Store
+Thumbs.db
+
+# ==========================================
+# Archivos de logs
+# ==========================================
+*.log
+
+# ==========================================
+# Archivos temporales
+# ==========================================
+*.tmp
+*.swp
+
+# ==========================================
+# Configuración específica
+# ==========================================
+# Ignorar credenciales locales
+application-local.yml
+application-local.properties

@@ -1,0 +1,60 @@
+# ==========================================
+# CONFIGURACIÓN DEL SERVIDOR Y APLICACIÓN
+# ==========================================
+server:
+  port: 8081 # Usamos un puerto fijo por ahora para que no choquen si pruebas localmente sin Gateway
+
+spring:
+  application:
+    name: ms-usuarios
+  
+  # ==========================================
+  # BASE DE DATOS E HIBERNATE (MySQL)
+  # ==========================================
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_usuarios?createDatabaseIfNotExist=true&serverTimezone=America/Lima&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: mysql
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update # Cambiar a 'validate' en producción
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+# ==========================================
+# EUREKA DISCOVERY CLIENT
+# ==========================================
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+# ==========================================
+# CONFIGURACIÓN PERSONALIZADA (Tus variables)
+# ==========================================
+# Variables de Seguridad (JWT)
+application:
+  security:
+    jwt:
+      # Llave de 256 bits (Obligatorio para HS256)
+      secret-key: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+      # Tiempo de expiración: 86400000 ms = 1 día
+      expiration: 86400000
+
+# Credenciales por defecto para DataInitializer
+app:
+  admin:
+    email: admin@capricho.com
+    password: admin123
+  cliente:
+    email: cliente@capricho.com
+    password: cliente123
+  pastelero:
+    email: pastelero@capricho.com
+    password: pastelero123

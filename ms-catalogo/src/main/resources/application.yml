@@ -1,0 +1,45 @@
+# ==========================================
+# CONFIGURACIÓN DEL SERVIDOR Y APLICACIÓN
+# ==========================================
+server:
+  port: 8082 # Puerto único para este microservicio
+
+spring:
+  application:
+    name: ms-catalogo # Nombre clave para Eureka y el Gateway
+  
+  # ==========================================
+  # BASE DE DATOS E HIBERNATE (db_catalogo)
+  # ==========================================
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_catalogo?createDatabaseIfNotExist=true&serverTimezone=America/Lima&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: mysql
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+# ==========================================
+# EUREKA DISCOVERY CLIENT
+# ==========================================
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+# ==========================================
+# SEGURIDAD DESCENTRALIZADA (Stateless Trust)
+# ==========================================
+application:
+  security:
+    jwt:
+      # ¡ESTA ES LA MAGIA! Debe ser EXACTAMENTE la misma llave que en ms-usuarios
+      secret-key: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855

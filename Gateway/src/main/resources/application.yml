@@ -1,0 +1,41 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        # 1. Rutas para Seguridad y Usuarios
+        - id: ms-usuarios-route
+          uri: lb://ms-usuarios
+          predicates:
+            - Path=/api/usuarios/**, /api/auth/**
+            
+        # 2. Rutas para el Catálogo y Recetas
+        - id: ms-catalogo-route
+          uri: lb://ms-catalogo
+          predicates:
+            - Path=/api/catalogo/**
+            
+        # 3. NUEVA REGLA: Pedidos y Facturación
+        - id: ms-pedidos-route
+          uri: lb://ms-pedidos
+          predicates:
+            - Path=/api/pedidos/** # 4. NUEVA REGLA: Inventario, Compras y Kardex
+        - id: ms-inventario-route
+          uri: lb://ms-inventario
+          predicates:
+            - Path=/api/inventario/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true

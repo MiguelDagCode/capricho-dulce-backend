@@ -1,0 +1,44 @@
+# ==========================================
+# CONFIGURACIÓN DEL SERVIDOR Y APLICACIÓN
+# ==========================================
+server:
+  port: 8083 # Puerto único para Pedidos
+
+spring:
+  application:
+    name: ms-pedidos
+  
+  # ==========================================
+  # BASE DE DATOS E HIBERNATE (db_pedidos)
+  # ==========================================
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_pedidos?createDatabaseIfNotExist=true&serverTimezone=America/Lima&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: mysql
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+# ==========================================
+# EUREKA DISCOVERY CLIENT
+# ==========================================
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+# ==========================================
+# SEGURIDAD DESCENTRALIZADA (Stateless Trust)
+# ==========================================
+application:
+  security:
+    jwt:
+      secret-key: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
