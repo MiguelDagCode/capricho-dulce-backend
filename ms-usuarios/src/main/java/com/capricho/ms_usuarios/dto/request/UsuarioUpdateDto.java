@@ -1,13 +1,14 @@
 package com.capricho.ms_usuarios.dto.request;
-import lombok.Builder;
+
+import jakarta.validation.constraints.Email;
 import lombok.Data;
 
-@Data @Builder
+@Data
 public class UsuarioUpdateDto {
-    private String nombre;
-    private String apellido;
-    private String correo;
-    private String telefono;
-    private Integer idRol;
+    @Email(message = "El formato de correo no es válido")
+    private String email;
+    
     private String password; // Opcional
+    
+    private Integer idRol;
 }

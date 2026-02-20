@@ -8,4 +8,5 @@ import com.capricho.ms_usuarios.model.Cliente;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Integer>{
 
+	boolean existsByDocumento(String documento);
 }

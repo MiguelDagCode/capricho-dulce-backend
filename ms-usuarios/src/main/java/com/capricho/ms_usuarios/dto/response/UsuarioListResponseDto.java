@@ -1,15 +1,18 @@
 package com.capricho.ms_usuarios.dto.response;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Data @Builder
+@Data 
 public class UsuarioListResponseDto {
-    private Integer idUsuario;
-    private String nombresCompletos; // "Juan Perez"
+	private Long idUsuario;
+    private String nombre;
+    private String apellido;
     private String correo;
-    private String nombreRol;
     private String telefono;
+    private String nombreRol;
     private Boolean estado;
 }

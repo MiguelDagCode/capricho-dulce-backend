@@ -15,7 +15,7 @@ spring:
         - id: ms-usuarios-route
           uri: lb://ms-usuarios
           predicates:
-            - Path=/api/usuarios/**, /api/auth/**
+            - Path=/api/usuarios/**, /api/auth/**, /api/admin/roles**
             
         # 2. Rutas para el Catálogo y Recetas
         - id: ms-catalogo-route
