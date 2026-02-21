@@ -27,4 +27,5 @@ public class Distrito implements Serializable {
 
     @Column(columnDefinition = "boolean default true")
     private Boolean activo = true;
+    //Go
 }
