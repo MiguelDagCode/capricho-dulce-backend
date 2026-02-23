@@ -20,7 +20,7 @@ import java.util.List;
 public class CategoriaController {
 
     private final CategoriaService categoriaService;
-
+    
     // 🟢 ENDPOINT PÚBLICO (Cualquier persona puede ver el catálogo)
     @GetMapping
     public ResponseEntity<ApiResponse<List<CategoriaResponseDto>>> listarCategorias() {
@@ -48,5 +48,42 @@ public class CategoriaController {
                 data
         );
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+    
+    // Obtener por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<CategoriaResponseDto>> obtenerPorId(@PathVariable Integer id) {
+
+        CategoriaResponseDto data = categoriaService.obtenerPorId(id);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, "Categoría encontrada", LocalDateTime.now(), data)
+        );
+    }
+
+    // Actualizar
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<CategoriaResponseDto>> actualizar(
+            @PathVariable Integer id,
+            @Valid @RequestBody CategoriaRequestDto request) {
+
+        CategoriaResponseDto data = categoriaService.actualizar(id, request);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, "Categoría actualizada", LocalDateTime.now(), data)
+        );
+    }
+
+    // Eliminar (lógico)
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> eliminar(@PathVariable Integer id) {
+
+        categoriaService.eliminar(id);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, "Categoría eliminada correctamente", LocalDateTime.now(), null)
+        );
     }
 }

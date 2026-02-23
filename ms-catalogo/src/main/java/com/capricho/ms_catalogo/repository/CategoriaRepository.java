@@ -10,4 +10,5 @@ import java.util.List;
 public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
     // Solo listamos las categorías que no han sido eliminadas lógicamente
     List<Categoria> findByActivoTrue(); 
+    boolean existsByNombre(String nombre);
 }

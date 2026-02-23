@@ -1,5 +1,8 @@
 package com.capricho.ms_catalogo.config;
 
-public class ApplicationConfig {
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
+@ConfigurationProperties
+public class ApplicationConfig {
+	
 }

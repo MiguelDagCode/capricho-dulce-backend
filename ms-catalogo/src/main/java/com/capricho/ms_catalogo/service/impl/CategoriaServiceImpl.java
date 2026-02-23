@@ -5,6 +5,8 @@ import com.capricho.ms_catalogo.dto.response.CategoriaResponseDto;
 import com.capricho.ms_catalogo.model.Categoria;
 import com.capricho.ms_catalogo.repository.CategoriaRepository;
 import com.capricho.ms_catalogo.service.CategoriaService;
+import com.capricho.ms_catalogo.util.ModeloNotFoundException;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,4 +40,43 @@ public class CategoriaServiceImpl implements CategoriaService {
         
         return new CategoriaResponseDto(categoriaGuardada.getIdCategoria(), categoriaGuardada.getNombre());
     }
+
+	@Override
+	@Transactional(readOnly = true)
+	public CategoriaResponseDto obtenerPorId(Integer id) {
+		Categoria categoria = categoriaRepository.findById(id)
+				.orElseThrow(() -> new ModeloNotFoundException("Categoria no encontrada"));
+		
+		return new CategoriaResponseDto(
+				categoria.getIdCategoria(),
+				categoria.getNombre()
+			);
+	}
+
+	@Override
+	@Transactional
+	public CategoriaResponseDto actualizar(Integer id, CategoriaRequestDto request) {
+		Categoria categoria = categoriaRepository.findById(id)
+				.orElseThrow(() -> new ModeloNotFoundException("Categoria no encontrada"));
+		
+		categoria.setNombre(request.getNombre());
+		
+		Categoria actualizada = categoriaRepository.save(categoria);
+		
+		return new CategoriaResponseDto(
+				actualizada.getIdCategoria(),
+				actualizada.getNombre()
+			);
+	}
+
+	@Override
+	@Transactional
+	public void eliminar(Integer id) {
+		Categoria categoria = categoriaRepository.findById(id)
+				.orElseThrow(() -> new ModeloNotFoundException("Categoria no encontrada"));
+		
+		categoria.setActivo(false);
+		categoriaRepository.save(categoria);
+		
+	}
 }

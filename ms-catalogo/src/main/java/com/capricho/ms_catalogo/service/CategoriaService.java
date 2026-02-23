@@ -8,4 +8,7 @@ import java.util.List;
 public interface CategoriaService {
     List<CategoriaResponseDto> listarActivas();
     CategoriaResponseDto registrar(CategoriaRequestDto request);
+    CategoriaResponseDto obtenerPorId(Integer id);
+    CategoriaResponseDto actualizar(Integer id, CategoriaRequestDto request);
+    void eliminar(Integer id);
 }
