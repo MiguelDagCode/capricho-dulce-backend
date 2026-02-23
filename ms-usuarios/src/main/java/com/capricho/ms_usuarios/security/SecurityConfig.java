@@ -30,9 +30,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable) // Nueva sintaxis de Spring Boot 3
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .authorizeHttpRequests(auth -> auth
+        .csrf(AbstractHttpConfigurer::disable)
+        .cors(AbstractHttpConfigurer::disable) // ¡Apagamos el CORS aquí porque el Gateway ya lo maneja!
+        .authorizeHttpRequests(auth -> auth
                 // 1. RUTAS PÚBLICAS (Login, Registro y Documentación Swagger)
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
@@ -52,6 +52,13 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /*
+     * 
+     * http
+     * .csrf(AbstractHttpConfigurer::disable) // Nueva sintaxis de Spring Boot 3
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .authorizeHttpRequests(auth -> auth
+     
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -67,4 +74,5 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+*/
 }
