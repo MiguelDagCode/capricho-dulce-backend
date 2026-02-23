@@ -19,7 +19,7 @@ CREATE TABLE tb_movimiento_inventario (
     id_movimiento BIGINT AUTO_INCREMENT PRIMARY KEY,
     id_insumo BIGINT NOT NULL,
     
-    id_usuario BIGINT NOT NULL, -- REFERENCIA LÓGICA (Admin que ingresa o Cajero que vende)
+    id_usuario BIGINT NOT NULL, 
     
     tipo_movimiento ENUM('INGRESO', 'SALIDA') NOT NULL,
     motivo ENUM('COMPRA_MANUAL', 'VENTA_PEDIDO', 'MERMA', 'AJUSTE') NOT NULL,
@@ -33,9 +33,3 @@ CREATE TABLE tb_movimiento_inventario (
     
     FOREIGN KEY (id_insumo) REFERENCES tb_stock_insumo(id_insumo)
 );
-
--- DATOS SEMILLA BÁSICOS (Coinciden con los 3 insumos de tu ms-catalogo)
-INSERT INTO tb_stock_insumo (id_insumo, stock_actual, stock_minimo) VALUES 
-(1, 50.000, 5.000), -- Harina Pastelera
-(2, 30.000, 5.000), -- Azúcar Blanca
-(3, 100.000, 20.000); -- Huevo
