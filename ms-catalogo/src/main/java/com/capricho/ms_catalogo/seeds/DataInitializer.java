@@ -23,7 +23,7 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
-        log.info("--- INICIANDO CARGA DE DATOS DEL CATÁLOGO (CON RECETAS) ---");
+        log.info("--- INICIANDO CARGA DE DATOS DEL CATÁLOGO (CON RECETAS COMPLETAS) ---");
 
         // 1. Crear Categorías
         Categoria catTortas = crearCategoriaSiNoExiste("Tortas");
@@ -52,21 +52,25 @@ public class DataInitializer implements CommandLineRunner {
                 "Clásico postre latino bañado en nuestra mezcla secreta de tres leches, coronado con merengue italiano y canela.", 
                 new BigDecimal("95.00"), "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80");
 
-        crearProductoSiNoExiste(catCupcakes, "Cupcakes de Vainilla x6", 
+        Producto prodCupcakes = crearProductoSiNoExiste(catCupcakes, "Cupcakes de Vainilla x6", 
                 "Caja de 6 esponjosos cupcakes de vainilla con buttercream de colores pasteles. Ideales para compartir.", 
                 new BigDecimal("45.00"), "https://images.unsplash.com/photo-1486427944299-d1955d23e34d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80");
 
-        crearProductoSiNoExiste(catCombos, "Combo Dulce Celebración", 
+        Producto prodCombo = crearProductoSiNoExiste(catCombos, "Combo Dulce Celebración", 
                 "El combo perfecto: Torta mediana a elección, 6 cupcakes variados y caja de macarons surtidos.", 
                 new BigDecimal("165.00"), "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80");
+
+        Producto prodCheesecake = crearProductoSiNoExiste(catPostres, "Cheesecake de Frutos Rojos", 
+                "Cremoso cheesecake estilo New York horneado sobre base de galleta, cubierto con mermelada casera de frutos rojos.", 
+                new BigDecimal("85.00"), "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80");
 
         // 4. Crear Recetas (Vincular Productos con Insumos)
         
         // Receta: Torta de Chocolate
-        crearRecetaSiNoExiste(prodChoco, insHarina, new BigDecimal("0.500")); // 500g
-        crearRecetaSiNoExiste(prodChoco, insAzucar, new BigDecimal("0.300")); // 300g
-        crearRecetaSiNoExiste(prodChoco, insHuevos, new BigDecimal("4.000")); // 4 unidades
-        crearRecetaSiNoExiste(prodChoco, insCacao, new BigDecimal("0.250"));  // 250g
+        crearRecetaSiNoExiste(prodChoco, insHarina, new BigDecimal("0.500"));
+        crearRecetaSiNoExiste(prodChoco, insAzucar, new BigDecimal("0.300"));
+        crearRecetaSiNoExiste(prodChoco, insHuevos, new BigDecimal("4.000"));
+        crearRecetaSiNoExiste(prodChoco, insCacao, new BigDecimal("0.250"));
 
         // Receta: Torta Red Velvet
         crearRecetaSiNoExiste(prodRedVelvet, insHarina, new BigDecimal("0.400"));
@@ -74,9 +78,27 @@ public class DataInitializer implements CommandLineRunner {
         crearRecetaSiNoExiste(prodRedVelvet, insQuesoCrema, new BigDecimal("0.600"));
         crearRecetaSiNoExiste(prodRedVelvet, insFresas, new BigDecimal("0.200"));
 
-        // Receta: Tres Leches
+        // Receta: Tres Leches Especial
         crearRecetaSiNoExiste(prodTresLeches, insHarina, new BigDecimal("0.300"));
+        crearRecetaSiNoExiste(prodTresLeches, insAzucar, new BigDecimal("0.200"));
         crearRecetaSiNoExiste(prodTresLeches, insHuevos, new BigDecimal("6.000"));
+
+        // Receta: Cupcakes de Vainilla x6
+        crearRecetaSiNoExiste(prodCupcakes, insHarina, new BigDecimal("0.250"));
+        crearRecetaSiNoExiste(prodCupcakes, insAzucar, new BigDecimal("0.150"));
+        crearRecetaSiNoExiste(prodCupcakes, insHuevos, new BigDecimal("3.000"));
+
+        // Receta: Combo Dulce Celebración (Gasta bastante inventario)
+        crearRecetaSiNoExiste(prodCombo, insHarina, new BigDecimal("0.800"));
+        crearRecetaSiNoExiste(prodCombo, insAzucar, new BigDecimal("0.600"));
+        crearRecetaSiNoExiste(prodCombo, insHuevos, new BigDecimal("8.000"));
+        crearRecetaSiNoExiste(prodCombo, insCacao, new BigDecimal("0.150"));
+
+        // Receta: Cheesecake de Frutos Rojos
+        crearRecetaSiNoExiste(prodCheesecake, insQuesoCrema, new BigDecimal("0.800"));
+        crearRecetaSiNoExiste(prodCheesecake, insAzucar, new BigDecimal("0.250"));
+        crearRecetaSiNoExiste(prodCheesecake, insFresas, new BigDecimal("0.400"));
+        crearRecetaSiNoExiste(prodCheesecake, insHuevos, new BigDecimal("2.000"));
 
         log.info("--- CARGA DE DATOS DEL CATÁLOGO FINALIZADA ---");
     }
