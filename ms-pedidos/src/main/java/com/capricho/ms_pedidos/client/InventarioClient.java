@@ -1,6 +1,9 @@
 package com.capricho.ms_pedidos.client;
 
+import com.capricho.ms_pedidos.client.dto.MermaRequest;
 import com.capricho.ms_pedidos.client.dto.ProcesarVentaRequest;
+import com.capricho.ms_pedidos.dto.request.RegistrarMermaRequest;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,4 +15,7 @@ public interface InventarioClient {
 
     @PostMapping("/api/inventario/operaciones/procesar-venta")
     Map<String, Object> procesarDescuentoInventario(@RequestBody ProcesarVentaRequest request);
+    
+    @PostMapping("/api/inventario/operaciones/registrar-merma")
+    Map<String, Object> registrarMerma(@RequestBody MermaRequest request);
 }

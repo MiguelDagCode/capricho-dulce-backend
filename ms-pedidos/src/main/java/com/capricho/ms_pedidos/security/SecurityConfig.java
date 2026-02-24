@@ -1,4 +1,5 @@
 package com.capricho.ms_pedidos.security;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,10 +14,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.capricho.ms_pedidos.security.jwt.JwtAuthenticationFilter;
 
-
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity // Vital para usar @PreAuthorize en los controllers
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -26,12 +26,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
-            // No configuramos CORS aquí porque el API Gateway ya se encarga de eso globalmente.
             .authorizeHttpRequests(auth -> auth
-                // Cualquiera puede ver el catálogo de productos y categorías (GET)
-                .requestMatchers(HttpMethod.GET, "/api/pedido/**").permitAll()
+                // Endpoints públicos
+                .requestMatchers(HttpMethod.GET, "/api/pedidos/**").permitAll()
                 
-                // Las demás operaciones (POST, PUT, DELETE) requieren estar autenticado
+                // Endpoints de cocina requieren rol específico (se valida con @PreAuthorize en el controlador)
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session
