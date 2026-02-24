@@ -3,6 +3,7 @@ package com.capricho.ms_inventario.service.impl;
 import com.capricho.ms_inventario.client.CatalogoClient;
 import com.capricho.ms_inventario.dto.request.ItemProductoRequest;
 import com.capricho.ms_inventario.dto.request.ProcesarVentaRequest;
+import com.capricho.ms_inventario.dto.request.RegistrarMermaRequest;
 import com.capricho.ms_inventario.dto.response.InsumoRequeridoDto;
 import com.capricho.ms_inventario.enums.MotivoMovimiento;
 import com.capricho.ms_inventario.enums.TipoMovimiento;
@@ -92,5 +93,59 @@ public class InventarioServiceImpl implements InventarioService {
             }
         }
         log.info("✅ Inventario actualizado correctamente para el Pedido ID: {}", request.getIdPedido());
+    }
+    
+    @Override
+    @Transactional
+    public void registrarMerma(RegistrarMermaRequest request) {
+        log.info("Registrando merma para pedido ID: {}, producto: {}", request.getIdPedido(), request.getIdProducto());
+        
+        // Obtener receta del producto
+        ApiResponse<List<InsumoRequeridoDto>> response = catalogoClient.obtenerRecetaPorProducto(request.getIdProducto()).getBody();
+        
+        if (response == null || !response.isSuccess() || response.getData() == null || response.getData().isEmpty()) {
+            throw new BusinessException("No se encontró receta activa para el producto ID: " + request.getIdProducto());
+        }
+        
+        List<InsumoRequeridoDto> receta = response.getData();
+        
+        for (InsumoRequeridoDto insumoReq : receta) {
+            BigDecimal cantidadADescontar = insumoReq.getCantidadBase()
+                    .multiply(new BigDecimal(request.getCantidad()));
+            
+            StockInsumo stock = stockInsumoRepository.findById(insumoReq.getIdInsumo())
+                    .orElseThrow(() -> new ModeloNotFoundException("El insumo ID " + insumoReq.getIdInsumo() + " no está registrado en el inventario."));
+            
+            if (stock.getStockActual().compareTo(cantidadADescontar) < 0) {
+                throw new BusinessException(String.format(
+                    "Stock insuficiente para merma de '%s'. Requerido: %s, Disponible: %s", 
+                    insumoReq.getNombreInsumo(), cantidadADescontar, stock.getStockActual()
+                ));
+            }
+            
+            stock.setStockActual(stock.getStockActual().subtract(cantidadADescontar));
+            
+            if (stock.getStockActual().compareTo(stock.getStockMinimo()) <= 0) {
+                log.warn("⚠️ ALERTA DE STOCK POR MERMA: El insumo '{}' ha caído a su nivel mínimo ({}).", 
+                        insumoReq.getNombreInsumo(), stock.getStockActual());
+            }
+            
+            stockInsumoRepository.save(stock);
+            
+            MovimientoInventario movimiento = new MovimientoInventario();
+            movimiento.setInsumo(stock);
+            movimiento.setIdUsuario(request.getIdUsuario());
+            movimiento.setIdPedidoReferencia(request.getIdPedido());
+            movimiento.setTipoMovimiento(TipoMovimiento.SALIDA);
+            movimiento.setMotivo(MotivoMovimiento.MERMA);
+            movimiento.setCantidad(cantidadADescontar);
+            movimiento.setObservacion("MERMA por error en preparación. Producto ID: " + request.getIdProducto() + 
+                    ". Motivo ID: " + request.getIdMotivo() + 
+                    (request.getObservacion() != null ? ". " + request.getObservacion() : ""));
+            
+            movimientoRepository.save(movimiento);
+        }
+        
+        log.info("✅ Merma registrada correctamente para pedido ID: {}", request.getIdPedido());
     }
 }
