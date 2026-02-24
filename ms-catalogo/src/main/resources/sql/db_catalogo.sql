@@ -41,6 +41,3 @@ CREATE TABLE tb_receta (
     FOREIGN KEY (id_insumo) REFERENCES tb_insumo(id_insumo)
 );
 
--- DATOS SEMILLA PARA EL PROGRAMADOR 2
-INSERT INTO tb_categoria (nombre) VALUES ('Tortas Clásicas'), ('Bocaditos'), ('Postres de Vitrina');
-INSERT INTO tb_insumo (nombre, unidad_medida) VALUES ('Harina Pastelera', 'KG'), ('Azúcar Blanca', 'KG'), ('Huevo', 'UNIDAD');
