@@ -1,36 +1,68 @@
 package com.capricho.ms_inventario.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "tb_stock_insumo")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class StockInsumo {
 
     @Id
     @Column(name = "id_insumo")
-    private Long idInsumo; // Referencia Lógica exacta a ms-catalogo
+    private Long idInsumo;
 
-    @Column(nullable = false, precision = 10, scale = 3)
-    private BigDecimal stockActual = BigDecimal.ZERO;
+    @Column(name = "stock_actual", nullable = false, precision = 10, scale = 3)
+    private BigDecimal stockActual;
 
-    @Column(nullable = false, precision = 10, scale = 3)
-    private BigDecimal stockMinimo = new BigDecimal("5.000");
+    @Column(name = "stock_minimo", nullable = false, precision = 10, scale = 3)
+    private BigDecimal stockMinimo;
 
-    @UpdateTimestamp
+    @Column(name = "ultima_actualizacion")
     private LocalDateTime ultimaActualizacion;
 
-    // Relación OneToMany para ver el historial de movimientos de este insumo
-    @OneToMany(mappedBy = "insumo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MovimientoInventario> movimientos = new ArrayList<>();
+    @Version
+    private Integer version;
+
+    // Getters y Setters
+
+    public Long getIdInsumo() {
+        return idInsumo;
+    }
+
+    public void setIdInsumo(Long idInsumo) {
+        this.idInsumo = idInsumo;
+    }
+
+    public BigDecimal getStockActual() {
+        return stockActual;
+    }
+
+    public void setStockActual(BigDecimal stockActual) {
+        this.stockActual = stockActual;
+    }
+
+    public BigDecimal getStockMinimo() {
+        return stockMinimo;
+    }
+
+    public void setStockMinimo(BigDecimal stockMinimo) {
+        this.stockMinimo = stockMinimo;
+    }
+
+    public LocalDateTime getUltimaActualizacion() {
+        return ultimaActualizacion;
+    }
+
+    public void setUltimaActualizacion(LocalDateTime ultimaActualizacion) {
+        this.ultimaActualizacion = ultimaActualizacion;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 }

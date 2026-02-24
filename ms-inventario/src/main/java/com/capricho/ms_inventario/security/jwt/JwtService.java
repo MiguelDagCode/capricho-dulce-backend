@@ -4,48 +4,32 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
-import java.util.function.Function;
+import java.security.Key;
 
 @Service
 public class JwtService {
 
-    @Value("${application.security.jwt.secret-key}")
-    private String secretKey;
+    // Clave de ejemplo (Base64 de 256 bits)
+    private static final String SECRET_KEY =
+            "MzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OTA=";
 
-    // 1. Extraer Email
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
-    }
-
-    // 2. Extraer el Rol que inyectamos en ms-usuarios
-    public String extractRol(String token) {
-        return extractClaim(token, claims -> claims.get("rol", String.class));
-    }
-
-    // 3. Extraer el ID (Te servirá luego cuando ms-pedidos guarde quién hizo la compra)
-    public Long extractIdUsuario(String token) {
-        return extractClaim(token, claims -> claims.get("id_usuario", Long.class));
-    }
-
-    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
+        return extractAllClaims(token).getSubject();
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(getSignInKey()) // Aquí ocurre la magia: si alguien alteró el token, esto falla
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(getSignKey())
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
+                .parseClaimsJws(token)
+                .getBody();
     }
 
-    private SecretKey getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+    private Key getSignKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
