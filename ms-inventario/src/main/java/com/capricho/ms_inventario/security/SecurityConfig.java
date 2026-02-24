@@ -27,8 +27,7 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             // No configuramos CORS aquí porque el API Gateway ya se encarga de eso globalmente.
             .authorizeHttpRequests(auth -> auth
-                // Cualquiera puede ver el catálogo de productos y categorías (GET)
-                .requestMatchers(HttpMethod.GET, "/api/inventario/**").permitAll()
+                .requestMatchers("/api/inventario/operaciones/**").permitAll()
                 
                 // Las demás operaciones (POST, PUT, DELETE) requieren estar autenticado
                 .anyRequest().authenticated()
