@@ -119,7 +119,7 @@ public class PedidoServiceImpl implements PedidoService {
         
         // Obtenemos pedidos PENDIENTE y EN_PREPARACION ordenados por fecha_registro ASC (FIFO)
         List<Pedido> pedidos = pedidoRepository.findByEstadoPedidoInOrderByFechaRegistroAsc(
-                List.of(EstadoPedido.PENDIENTE, EstadoPedido.EN_PREPARACION)
+                List.of(EstadoPedido.PENDIENTE, EstadoPedido.EN_PREPARACION, EstadoPedido.LISTO)
         );
         
         return pedidos.stream()
@@ -268,6 +268,7 @@ public class PedidoServiceImpl implements PedidoService {
                 .estado(pedido.getEstadoPedido())
                 .fechaRegistro(pedido.getFechaRegistro())
                 .tiempoTranscurrido(calcularTiempoTranscurrido(pedido.getFechaRegistro()))
+                .tipoEntrega(pedido.getTipoEnvio())
                 .detalles(detallesDto)
                 .build();
     }

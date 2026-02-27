@@ -1,6 +1,8 @@
 package com.capricho.ms_pedidos.response;
 
 import com.capricho.ms_pedidos.enums.EstadoPedido;
+import com.capricho.ms_pedidos.enums.TipoEnvio;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +20,7 @@ public class PedidoCocinaDto {
     private EstadoPedido estado;
     private LocalDateTime fechaRegistro;
     private String tiempoTranscurrido; // "Hace 5 min"
+    private TipoEnvio tipoEntrega;
     private List<DetalleCocinaDto> detalles;
 }
 
